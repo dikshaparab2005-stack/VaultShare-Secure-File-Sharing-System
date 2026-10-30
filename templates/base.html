@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220"><title>{% block title %}VaultShare{% endblock %} · VaultShare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="{{ url_for('dashboard') if g.user else url_for('login') }}"><span class="brand-mark">V</span><span>Vault<span class="brand-accent">Share</span></span></a>
+{% if g.user %}<button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button><nav class="nav-links">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a><a href="{{ url_for('upload') }}">Upload File</a><a href="{{ url_for('my_files') }}">My Files</a><a href="{{ url_for('shared_with_me') }}">Shared With Me</a><a class="notification-bell" href="{{ url_for('notifications') }}">Notifications{% if unread_notification_count %}<span class="notification-count">{{ unread_notification_count }}</span>{% endif %}</a><a href="{{ url_for('logs') }}">Activity Logs</a>
+  <form action="{{ url_for('logout') }}" method="post" class="logout-form"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="nav-logout">Log out</button></form>
+</nav>{% endif %}</header>
+<main class="page-wrap">
+  {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="alerts" aria-live="polite">{% for category,message in messages %}<div class="alert alert-{{ category }}"><span>{{ message }}</span><button class="alert-close" aria-label="Dismiss">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">VaultShare <span>·</span> Private by design <span>·</span> {{ current_year }}</footer>
+</body></html>
